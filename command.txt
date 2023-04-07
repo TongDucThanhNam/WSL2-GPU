@@ -1,0 +1,28 @@
+conda install -c conda-forge cudatoolkit=11.8.0
+python3 -m pip install nvidia-cudnn-cu11==8.6.0.163 tensorflow==2.12.*
+CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)"))
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib
+# Verify install:
+python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+
+
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+
+# libnvinfer.so.7
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/dan/anaconda3/lib/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/dan/anaconda3/lib/python3.10/site-packages/tensorrt/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/dan/anaconda3/envs/tf/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/dan/anaconda3/envs/tf/lib/python3.10/site-packages/tensorrt/
+
+# install tensorrt
+pip install nvidia-pyindex
+pip install --upgrade nvidia-tensorrt
+
+CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)"))
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib
+
+mkdir -p $CONDA_PREFIX/etc/conda/activate.d
+CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)"))
+echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib' > $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_HOME/lib64:$CUDNN_HOME/lib64
