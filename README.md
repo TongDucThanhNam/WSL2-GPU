@@ -73,7 +73,7 @@ echo $LD_LIBRARY_PATH
 
 - Install tensorflow
 ```bash
-pip install tensorflow==2.12.*
+pip install tensorflow==2.10
 ```
 - Cài thêm các thư viện khi bị báo lỗi
 ```bash
