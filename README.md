@@ -4,21 +4,15 @@
   - Pytorch (Torchvision, Torchtext, Torchaudio)
   - Cudf - thay cho Pandas
   - CuPy - thay cho Numpy và Scipy
-  - Hummingbird - cải tiến Scikit-learn để dụng tourch-GPU
-  - Caffe
-  - Caffe2
-  - MXNet
-  - CNTK : 
-  - Theano
-  - Chainer
+
 
 ## Cài đặt GPU cho WSL2
 ### Cài đặt WSL2
 ```bash
 # Cài đặt WSL2
 wsl --install
-# Cài đặt Ubuntu 20.04
-wsl --install -d Ubuntu-20.04
+# Cài đặt Ubuntu
+wsl --install -d Ubuntu
 ```
 
 ### Thiết lập WSL2 Ubuntu 20.04
@@ -33,6 +27,18 @@ bash Miniconda3-latest-Linux-x86_64.sh
 source ~/.bashrc
 ```
 
+- Thêm conda vào PATH
+```
+# export PATH="/path/to/your/conda/bin:$PATH"
+# /home/terasumi/miniconda3
+export PATH="/home/terasumi/miniconda3/bin:$PATH"
+```
+- Check conda
+```bash
+conda --version
+```
+
+
 - Cài đặt không mở base conda
 ```bash
 conda config --set auto_activate_base false
@@ -41,18 +47,27 @@ conda config --set auto_activate_base false
 - Tạo môi trường conda
 ```bash
 conda create --name tf python=3.10
+```
+
+- Reload bashrc
+```bash
+source ~/.bashrc
+```
+
+- Kích hoạt môi trường conda tf
+```bash
 conda activate tf
 ```
 - Kiểm tra đã cài đặt NVIDIA GPU chưa
 ```bash
 nvidia-smi
+# Hiển thị thông tin GPU
 ```
-
 
 - Cài đặt CUDA and cuDNN
 ```bash
-conda install -c conda-forge cudatoolkit=11.8.0
-pip install nvidia-cudnn-cu11==8.6.0.163
+conda install conda-forge::cudatoolkit
+pip install nvidia-cudnn-cu11
 ```
 
 - Thêm đường dẫn CUDA vào PATH
@@ -60,25 +75,34 @@ pip install nvidia-cudnn-cu11==8.6.0.163
 [//]: # (&#40;export PATH=/usr/local/cuda-11.8/bin${PATH:+:${PATH}}&#41;)
 
 [//]: # (&#40;export LD_LIBRARY_PATH=/usr/local/cuda-11.8/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}&#41;)
+
+
 ```bash
 mkdir -p $CONDA_PREFIX/etc/conda/activate.d
 CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)"))
 echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib' > $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
 ```
+- Reload conda
+```bash
+source ~/.bashrc
+```
+
 - check cuda path
 ```bash
 conda activate tf
-echo $LD_LIBRARY_PATH
+echo $LD_LIBRARY_PATH # Kiểm tra đường dẫn CUDA
+# Should show :/home/terasumi/miniconda3/envs/tf/lib/:/home/terasumi/miniconda3/envs/tf/lib/python3.10/site-packages/nvidia/cudnn/lib
 ```
 
 - Install tensorflow
 ```bash
-pip install tensorflow==2.10
+python3 -m pip install tensorflow[and-cuda]
 ```
 - Cài thêm các thư viện khi bị báo lỗi
 ```bash
 pip install --force-reinstall charset-normalizer==3.1.0
 pip install nvidia-pyindex
+pip install chardet
 pip install --upgrade nvidia-tensorrt
 ```
 
@@ -100,11 +124,18 @@ jupyter notebook --generate-config
 ```bash
 cd ~/.jupyter
 ```
+
+- Mở file jupyter_notebook_config.py
+```bash
+sudo nano jupyter_notebook_config.py
+```
+
  - Thêm đoạn code sau vào file jupyter_notebook_config.py
 ```python
 import os
 c = get_config()
-os.environ['LD_LIBRARY_PATH'] = '/usr/local/cuda-8.0/lib64:usr/local/cuda-8.0/lib64/libcudart.so.8.0'
+#/home/terasumi/miniconda3/envs/tf/lib/:/home/terasumi/miniconda3/envs/tf/lib/python3.10/site-packages/nvidia/cudnn/lib
+os.environ['LD_LIBRARY_PATH'] = "/home/terasumi/miniconda3/envs/tf/lib/:/home/terasumi/miniconda3/envs/tf/lib/python3.10/site-packages/nvidia/cudnn/lib"
 c.Spawner.env.update('LD_LIBRARY_PATH')
 ```
 
@@ -127,12 +158,3 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 print('Device:', device)
 ```
-
-- Cài đặt Hummingbird
-```bash
-pip install hummingbird-ml
-```
-
-
-
-
