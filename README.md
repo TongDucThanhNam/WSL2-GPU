@@ -64,37 +64,8 @@ nvidia-smi
 # Hiển thị thông tin GPU
 ```
 
-- Cài đặt CUDA and cuDNN
-```bash
-conda install conda-forge::cudatoolkit
-pip install nvidia-cudnn-cu11
-```
 
-- Thêm đường dẫn CUDA vào PATH
-
-[//]: # (&#40;export PATH=/usr/local/cuda-11.8/bin${PATH:+:${PATH}}&#41;)
-
-[//]: # (&#40;export LD_LIBRARY_PATH=/usr/local/cuda-11.8/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}&#41;)
-
-
-```bash
-mkdir -p $CONDA_PREFIX/etc/conda/activate.d
-CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)"))
-echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib' > $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
-```
-- Reload conda
-```bash
-source ~/.bashrc
-```
-
-- check cuda path
-```bash
-conda activate tf
-echo $LD_LIBRARY_PATH # Kiểm tra đường dẫn CUDA
-# Should show :/home/terasumi/miniconda3/envs/tf/lib/:/home/terasumi/miniconda3/envs/tf/lib/python3.10/site-packages/nvidia/cudnn/lib
-```
-
-- Install tensorflow
+- Install tensorflow (Giờ khi tải tensorflơw bằng lệnh bên dưới sẽ tự động cài đặt các gói Cuda cần thiết)
 ```bash
 python3 -m pip install tensorflow[and-cuda]
 ```
